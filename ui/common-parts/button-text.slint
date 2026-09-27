@@ -1,0 +1,72 @@
+export component ButtonText {
+	in property <float> size: 1.0;
+	
+	width: width-text.width + 10px;
+	height: display-text.font-size + 10px;
+
+
+	in property <brush> background <=> rectangle.background;
+	in property <length> border-radius <=> rectangle.border-radius;
+	rectangle := Rectangle {
+		background: lime;
+		border-radius: 8px;
+	}
+
+
+	out property <length> text-width <=> width-text.width;
+	width-text := Text {
+		text <=> display-text.text;
+
+		font-size <=> display-text.font-size;
+		font-family: "Roboto";
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		stroke: black;
+		stroke-width: 2px;		
+	}
+
+	in property <string> text <=> display-text.text;
+	in-out property <length> font-size <=> display-text.font-size;
+	display-text := Text {
+		width: 100%;
+		height: 100%;
+
+		text: "Button";
+
+		font-size: 20px * root.size;
+		font-family: "Roboto";
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		stroke: black;
+		stroke-width: 2px;
+	}
+
+
+	callback clicked <=> touch-area.clicked;
+	touch-area := TouchArea {
+		mouse-cursor: pointer;
+		changed has-hover => {
+			if self.has-hover {
+				hovered-rectangle.opacity = 0.2;
+			}
+			else {
+				hovered-rectangle.opacity = 0.0;
+			}
+		}
+	}
+
+
+	hovered-rectangle := Rectangle {
+		background: white;
+		border-radius <=> rectangle.border-radius;
+
+		opacity: 0.0;
+		animate opacity {
+			duration: 100ms;
+		}
+	}
+}

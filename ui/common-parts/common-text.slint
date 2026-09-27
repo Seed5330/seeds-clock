@@ -1,0 +1,33 @@
+import "@seeds-clock/assets/roboto/Roboto-VariableFont_wdth,wght.ttf";
+
+export component CommonText {
+	width: text-size.width + 10px;
+	height: text-size.font-size + 10px;
+	
+
+	in-out property <string> text <=> text.text;
+	in-out property <length> font-size <=> text.font-size;
+
+	text-size := Text {
+		visible: false;
+
+		text <=> text.text;
+		font-size <=> text.font-size;
+	}
+
+	text := Text {
+		width <=> root.width;
+		height <=> root.height;
+
+		text: "CommonTextStyle";
+
+		font-size: 20px;
+		font-family: "Roboto";
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		stroke: black;
+		stroke-width: 2px;
+	}	
+}

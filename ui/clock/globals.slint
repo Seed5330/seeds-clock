@@ -1,0 +1,62 @@
+export struct ClockData {
+	name: string,
+	hours-offset: int,
+	minutes-offset: int,
+
+	time: string,
+	utc-offset-display: string,
+}
+
+export global ClockGlobals {
+	in-out property <bool> preview-mode: true;
+
+	in-out property <[string]> hours-offset-scroll: [
+		"00", "01", "02", "03", "04",
+		"05", "06", "07", "08", "09",
+	];
+	in-out property <[string]> minutes-offset-scroll: root.hours-offset-scroll;
+
+
+	pure callback backend-clock-data-new(name: string, hours-offset: int, minutes-offset: int) -> ClockData;
+	public pure function clock-data-new(name: string, hours-offset: int, minutes-offset: int) -> ClockData {
+		if !root.preview-mode {
+			return backend-clock-data-new(name, hours-offset, minutes-offset);
+		}
+		
+		{
+			name: name,
+			hours-offset: hours-offset,
+			minutes-offset: minutes-offset,
+			time: "00:00:00",
+			utc-offset-display: hours-offset + "hr " + minutes-offset + "min",
+		}
+	}
+
+
+	in-out property <ClockData> local-clock: root.clock-data-new("Local Clock", 1, 0);
+
+	in-out property <[ClockData]> clock-list: [
+		root.clock-data-new("Defaults", 0, 0),
+		root.clock-data-new("Nudged", -1, 0),
+		root.clock-data-new("Half Way", 6, 0),
+		root.clock-data-new("Negative", -10, 0),
+		root.clock-data-new("End Point", 12, 0),
+	];
+
+	
+	callback add-clock(clock-data: ClockData);
+	callback remove-clock(index: int);
+	callback modify-clock(index: int, clock-data: ClockData);	
+
+	public function save-clock(index: int, clock-data: ClockData) {
+		if index == -1 {
+			root.add-clock(clock-data);
+		}
+
+		modify-clock(index, clock-data);
+		true
+	}
+
+	pure callback exceeds-character-limit(typed-name: string) -> bool;
+	pure callback has-clock(clock-name: string) -> bool;
+}

@@ -1,0 +1,130 @@
+export component ScrollChange {
+	in property <float> size: 1.0;
+
+
+	width: text.width + 10px;
+	text := Text {
+		visible: false;
+
+		text: root.scroll-select[root.scroll-select.length / 2];
+		font-size: root.box-height - 5px;
+	}
+
+
+	height: 40px * root.size;
+	private property <length> box-height: root.height / 2;
+
+	
+	in property <brush> background: cyan;
+	Rectangle {
+		background <=> root.background;
+		clip: true;
+	}
+
+
+	in-out property <string> debug-name: "Scroll Change";
+	in property <bool> preview-mode <=> touch-area.visible;	
+
+	in property <[string]> scroll-select: [
+		"-8", "-7", "-6", "-5", "-4", "-3", "-2", "-1",
+		"+0", "+1", "+2", "+3", "+4", "+5", "+6", "+7",
+	];
+
+	flickable := Flickable {
+		animate content-y {
+			duration: 200ms;
+			easing: ease-in-back;
+		}
+
+		
+		flicked => {
+			timer.start();
+			timer.restart();
+		}
+
+
+		vertical-layout := VerticalLayout {
+			alignment: center;
+
+			padding-top: root.box-height / 2;
+			padding-bottom: self.padding-top;
+
+			for element in scroll-select: Text {
+				width: 100%;
+				height: root.box-height;
+
+				text: element;
+
+				font-size: text.font-size;
+				font-family: "Roboto";
+
+				horizontal-alignment: center;
+				vertical-alignment: center;
+
+				stroke: black;
+				stroke-width: 2px;
+			}
+		}
+
+		touch-area := TouchArea {
+			visible: true;
+
+			mouse-cursor: pointer;
+			clicked => {
+				let name = root.debug-name;
+				let index = root.get-index();
+				let string-at-index = root.scroll-select[index];
+
+				let output =
+					name + "[" + index + "]: " + string-at-index;
+
+				debug(output);
+			}
+		}
+	}
+
+
+	timer := Timer {
+		interval: 1s;
+		running: false;
+
+		triggered => {
+			root.set-index(root.get-index());
+			timer.stop();
+		}
+	}
+
+
+	init => {
+		let default-index = root.scroll-select.length / 2;
+		root.set-index(default-index);
+	}
+
+	public function set-index(index: int) {
+		let safe-index = root.index-boundaries(index) * -1;
+
+		flickable.content-y =
+			root.box-height * safe-index;
+	}
+
+	pure function index-boundaries(index: int) -> int {
+		let selection-count = root.scroll-select.length;
+
+		if index < 0 {
+			return 0;
+		}
+		else if index >= selection-count {
+			return selection-count - 1;
+		}
+		else {
+			return index;
+		}
+	}
+
+	public pure function get-index() -> int {
+		let index-leniency = root.box-height * 0.5;
+		let absolute-index = root.box-height * - 1;
+
+		(flickable.content-y - index-leniency) / absolute-index
+	}
+}

@@ -1,0 +1,126 @@
+import { AlarmGlobals, AlarmData } from "../globals.slint";
+import { NameChanger } from "name-changer.slint";
+import { TimeChanger } from "time-changer.slint";
+import { Scheduler } from "scheduler.slint";
+import { ConfirmButtons } from "confirm-buttons.slint";
+
+
+export component AlarmDataChanger {
+	private property <bool> preview-mode <=> AlarmGlobals.preview-mode;
+	
+	width: 280px;
+	height: 220px;
+
+
+	Rectangle {
+		background: orange;
+		border-radius: 32px;
+	}
+
+
+	name-changer := NameChanger {
+		y: 10px;
+		size: 0.7;
+		background: #E68939;
+
+		//name
+	}
+
+	time-changer := TimeChanger {
+		y: 50px;
+		size: 1.7;
+		width: 120px;
+
+		background: transparent;
+
+		preview-mode <=> root.preview-mode;
+		hour-scroll <=> AlarmGlobals.hour-scroll;
+		minute-scroll <=> AlarmGlobals.minute-scroll;
+	}
+
+	scheduler := Scheduler {
+		y: 135px;
+		size: 0.6;
+		circle-color: #F2C33F;
+
+		// schedule
+	}
+
+	callback clicked();
+	ConfirmButtons {
+		y: 185px;
+		size: 0.8;
+		width: 240px;
+
+		delete => {
+			AlarmGlobals.remove-alarm(root.current-index);
+			root.clicked();
+		}
+
+		cancel => {
+			root.clicked();
+		}
+
+		save => {
+			root.save-alarm(root.current-index);
+		}
+	}
+
+
+	private property <int> current-index: -1;
+	public function set-index(index: int) {
+		root.current-index = index;
+
+		if index == -1 {
+			name-changer.name = "New Alarm";
+			time-changer.set-time(0, 0);
+			scheduler.schedule = [false, false, false, false, false, false, false];
+			return;
+		}
+
+		let alarm-data = AlarmGlobals.alarm_list[index];
+		name-changer.name = alarm-data.name;
+		time-changer.set-time(alarm-data.hour, alarm-data.minute);
+
+		scheduler.schedule = [
+			alarm-data.schedule[0],
+			alarm-data.schedule[1],
+			alarm-data.schedule[2],
+			alarm-data.schedule[3],
+			alarm-data.schedule[4],
+			alarm-data.schedule[5],
+			alarm-data.schedule[6],
+		];
+	}
+
+	callback duplicate-error(time-display: string);
+	function save-alarm(index: int) {
+		let alarm-data = {
+			name: name-changer.name,
+			hour: time-changer.get-hour(),
+			minute: time-changer.get-minute(),
+			schedule: scheduler.schedule,
+			toggled: index == -1 ?
+				true : AlarmGlobals.alarm_list[index].toggled,
+		};
+
+		let hour = alarm-data.hour;
+		let minute = alarm-data.minute;
+
+		if AlarmGlobals.has-time(hour, minute) {
+			let time-display = AlarmGlobals.get-time-display(hour, minute);
+			root.duplicate-error(time-display);
+			return;
+		}
+
+
+		if index == -1 {
+			AlarmGlobals.add-alarm(alarm-data);
+		}
+		else {
+			AlarmGlobals.modify-alarm(index, alarm-data)
+		}
+
+		root.clicked();
+	}
+}

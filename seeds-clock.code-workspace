@@ -1,0 +1,25 @@
+{
+	"folders": [
+		{
+			"name": "seeds-common",
+			"path": "../CommonScripts/seeds-common"
+		},
+		{
+			"name": "seeds-clock",
+			"path": "."
+		},
+		{
+			"name": "src",
+			"path": "src"
+		},
+		{
+			"name": "ui",
+			"path": "ui"
+		},
+		{
+			"name": "tests",
+			"path": "tests"
+		}
+	],
+	"settings": {}
+}

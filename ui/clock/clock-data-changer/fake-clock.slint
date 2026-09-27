@@ -1,0 +1,44 @@
+export component FakeClock {
+	width: 300px;
+	height: 80px;
+
+	
+	Rectangle {
+		background: cyan;
+	}
+
+
+	in property <string> name <=> name.text;
+	in property <string> hours-offset: "+00";
+	in property <string> minutes-offset: "+00";
+
+	VerticalLayout {
+		alignment: center;
+
+		name := Text {
+			text: "Name Here";
+
+			font-size: 20px;
+			font-family: "Roboto Thin";
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+
+			stroke: black;
+			stroke-width: 2px;
+		}
+
+		Text {
+			text: root.hours-offset + " " + root.minutes-offset;
+
+			font-size: 20px;
+			font-family: "Roboto Thin";
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+
+			stroke: black;
+			stroke-width: 2px;
+		}
+	}
+}

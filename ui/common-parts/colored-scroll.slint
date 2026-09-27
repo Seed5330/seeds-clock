@@ -1,0 +1,38 @@
+export component ColoredYScroll {
+	width: 200px;
+
+	in property <length> element-height: 30px;
+	in property <int> show-count: 3;
+	
+	height: root.set-height();
+	pure function set-height() -> length {
+		let all-elements-height = root.element-height * root.show-count;
+		let all-spacings-height = vertical-layout.spacing * (root.show-count + 1);
+
+		all-elements-height + all-spacings-height
+	}
+
+
+	in-out property <length> spacing <=> vertical-layout.spacing;
+	in property <brush> background <=> rectangle.background;
+	
+	rectangle := Rectangle {
+		background: yellow;
+		clip: true;
+
+		Flickable {
+
+			vertical-layout := VerticalLayout {
+				alignment: center;
+				cross-axis-alignment: center;
+
+				spacing: 10px;
+
+				padding-top: self.spacing;
+				padding-bottom: self.spacing;
+				
+				@children
+			}
+		}
+	}
+}

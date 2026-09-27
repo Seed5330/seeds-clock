@@ -1,0 +1,42 @@
+export component DuplicateNameError {
+	width: width-text.width + 20px;
+	height: 30px;
+
+
+	Rectangle {
+		background: #F01838;
+		
+		border-color: black;
+		border-width: 2px;
+	}
+
+
+	width-text := Text {
+		visible: false;
+		text <=> error-text.text;
+
+		font-size <=> error-text.font-size;
+		font-family <=> error-text.font-family;
+	}
+
+	in property <string> clock-name: "CLOCKSCLOCKS";
+	error-text := Text {
+		width: 100%;
+		height: 100%;
+
+		text:
+			"Clock with the name  '" +
+			root.clock-name +
+			"'  already exists.";
+		color: #FFA3B0;
+
+		font-size: 16px;
+		font-family: "Roboto";
+		
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		stroke: black;
+		stroke-width: 2px;
+	}	
+}

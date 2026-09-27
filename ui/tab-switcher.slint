@@ -1,0 +1,36 @@
+export struct TabProperties {
+	name: string,
+	color: brush,
+	visible: bool,
+}
+
+export component TabSwitch {
+	width: 1200px / 4;
+	height: 75px;
+
+
+	in property <brush> color <=> rectangle.background;
+	rectangle := Rectangle {
+		background: gray;
+	}
+
+	in property <string> name <=> text.text;
+	text := Text {
+		text: "SWITCH";
+
+		font-size: root.height * 0.6;
+		font-family: "Roboto";
+
+		stroke: black;
+		stroke-width: 2px;
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+	}
+
+
+	callback clicked <=> touch-area.clicked;
+	touch-area := TouchArea {
+		mouse-cursor: pointer;
+	}
+}

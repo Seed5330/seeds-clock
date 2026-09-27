@@ -1,0 +1,54 @@
+
+export component TextWithBackround {
+	width: dummy-text.get-width();
+	height: text.font-size + 10px;
+
+	in property <brush> background <=> rectangle.background;
+	in property <length> border-radius <=> rectangle.border-radius;
+	rectangle := Rectangle {
+		background: greenyellow;
+	}
+
+	dummy-text := Text {
+		visible: false;
+
+		text <=> text.text;
+		
+		font-size <=> text.font-size;
+		font-family <=> text.font-family;
+		
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		pure function get-width() -> length {
+			self.width + 15px;
+		}
+	}
+
+	in property <string> text <=> text.text;
+	in property <length> font-size <=> text.font-size;
+	in property <brush> text-color <=> text.color;
+
+	in property <LayoutAlignment> alignment: center;
+	horizontal-layout := HorizontalLayout {
+		alignment: root.alignment;
+		cross-axis-alignment: center;
+
+		text := Text {
+			width: dummy-text.get-width();
+			height: 100%;
+
+			text: "TEXT HERE";
+
+			font-size: 20px;
+			font-family: "Roboto";
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+
+			stroke: black;
+			stroke-width: 2px;
+		}
+	}
+
+}

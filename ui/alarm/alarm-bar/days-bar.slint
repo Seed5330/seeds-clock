@@ -1,0 +1,42 @@
+import { TextInCircle } from "@seeds-clock/ui/alarm/alarm-bar/text-in-circle.slint";
+
+
+export component DaysBar {
+	in property <float> size: 1.0;
+
+	width: 400px * root.size;
+	height: 60px * root.size;
+
+	in property <brush> rectangle-background <=> rectangle.background;
+	rectangle := Rectangle {
+		background: goldenrod;
+	}
+
+	private property <[string]> days: [
+		"M", "T", "W", "T", "F", "S", "S",
+	];
+
+	in property <[bool]> scheduled-days: [
+		true, true, true, true, true, false, false,
+	];
+
+	in property <brush> enabled-day-color: bisque;
+	in property <brush> disabled-day-color: gray;
+	horizontal-layout := HorizontalLayout {
+		alignment: space-between;
+		cross-axis-alignment: center;
+
+		spacing: 5px;
+		padding: self.spacing;
+
+		for day[i] in days: TextInCircle {
+			size <=> root.size;
+
+			private property <bool> enabled: root.scheduled-days[i];
+
+			background: self.enabled ?
+				root.enabled-day-color : root.disabled-day-color;
+			text: day;
+		}
+	}
+}

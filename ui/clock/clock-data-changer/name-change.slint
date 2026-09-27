@@ -1,0 +1,45 @@
+export component NameChange {
+	in property <float> size: 1.0;
+
+	width: 150px * root.size;
+	height: 24px * root.size;
+	
+
+
+	in property <brush> background <=> rectangle.background;
+	rectangle := Rectangle {
+		background: red;
+	}
+
+
+
+	in-out property <string> text <=> text.text;
+	text := Text {
+		width <=> root.width;
+
+		text <=> text-input.text;
+		color: black;
+
+		font-size: 16px * root.size;
+		font-family: "Roboto Thin";
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		stroke: self.color;
+		stroke-width: 2px;
+	}
+
+	text-input := TextInput {
+		width <=> text.width;
+		
+		text: "GHJGHJGHJGHJ";
+		color: white;
+
+		font-size <=> text.font-size;
+		font-family <=> text.font-family;
+
+		horizontal-alignment <=> text.horizontal-alignment;
+		vertical-alignment <=> text.vertical-alignment;
+	}
+}

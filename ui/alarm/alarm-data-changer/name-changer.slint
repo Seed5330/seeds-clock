@@ -1,0 +1,44 @@
+export component NameChanger {
+	in property <float> size: 1.0;
+
+	width: 250px * root.size;
+	height: text.font-size + 15px;
+
+
+	in property <brush> background <=> rectangle.background;
+	rectangle := Rectangle {
+		background: red;
+		border-radius: 32px;
+	}
+
+	in-out property <string> name <=> text.text;
+	text := Text {
+		width: 100%;
+		height: 100%;
+
+		text: "JAKQJAKQJAKQJAKQ";
+		color: black;
+
+		font-size: 20px * root.size;
+		font-family: "Roboto";
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+
+		stroke: black;
+		stroke-width: 2px;
+	}
+
+	text-style := TextInput {
+		width: 100%;
+		height: 100%;
+
+		text <=> text.text;
+
+		font-size <=> text.font-size;
+		font-family <=> text.font-family;
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+	}
+}

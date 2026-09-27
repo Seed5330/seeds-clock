@@ -1,0 +1,84 @@
+export struct AlarmData {
+	name: string,
+	hour: int,
+	minute: int,
+	schedule: [bool],
+	toggled: bool,
+}
+
+export global AlarmGlobals {
+	in-out property <bool> preview-mode: true;
+
+	pure callback get-time-display(hour: int, minute: int) -> string;
+
+	in-out property <[string]> hour-scroll: [
+		"H", "O", "U", "R", "S", "C", "R", "O", "L", "L"
+	];
+
+	in-out property <[string]> minute-scroll: [
+		"M", "I", "N", "U", "T", "E", "S", "C", "R", "O", "L", "L"
+	];
+
+	callback add-alarm(alarm-data: AlarmData);
+	callback remove-alarm(index: int);
+	callback modify-alarm(index: int, alarm-data: AlarmData);
+
+	callback has-time(hour: int, minute: int) -> bool;
+
+
+	callback should-match-an-alarm(hour: int, minute: int);
+
+	in-out property <[AlarmData]> alarm_list: [
+		{
+			name: "COUNTERSCOUNTERS", toggled: true,
+			hour: 0, minute: 5,
+			schedule: [true, true, true, true, true, false, false],
+		},
+		{
+			name: "Number Two", toggled: true,
+			hour: 2, minute: 20,
+			schedule: [false, true, false, true, false, false, false],
+		},
+		{
+			name: "Treason", toggled: true,
+			hour: 3, minute: 30,
+			schedule: [true, true, false, true, true, true, true],
+		},
+		{
+			name: "BLANK", toggled: false,
+			hour: 0, minute: 0,
+			schedule: [false, false, false, false, false, false, false],
+		},
+		{
+			name: "FIVEMAN", toggled: true,
+			hour: 5, minute: 5,
+			schedule: [true, true, true, true, true, false, false],
+		},
+		{
+			name: "Sixth Ranger", toggled: true,
+			hour: 6, minute: 30,
+			schedule: [false, false, false, false, true, false, false],
+		},
+		{
+			name: "Slanted Angle", toggled: true,
+			hour: 7, minute: 20,
+			schedule: [false, true, false, false, false, false, true],
+		},		
+		{
+			name: "Eight Ball", toggled: true,
+			hour: 8, minute: 40,
+			schedule: [true, false, true, true, false, false, false],
+		},
+		{
+			name: "Kyu", toggled: true,
+			hour: 9, minute: 15,
+			schedule: [false, false, true, false, false, true, false],
+		},
+		{
+			name: "THE END", toggled: false,
+			hour: 23, minute: 55,
+			schedule: [false, false, false, false, false, false, true],
+		},			
+	];
+}
+

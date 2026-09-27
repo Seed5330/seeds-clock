@@ -1,0 +1,63 @@
+export component TimeDisplay {
+	in property <float> size: 1.0;
+
+	width: 250px * root.size;
+	height: 150px * root.size;
+
+
+	in property <brush> background <=> rectangle.background;
+	out property <length> border-radius <=> rectangle.border-radius;
+	rectangle := Rectangle {
+		background: yellow;
+		border-radius: 16px;
+	}
+
+
+	in-out property <string> name <=> name.text;
+	in property <string> time <=> time.text;
+	in property <string> utc-offset-display <=> utc-offset-display.text;
+	VerticalLayout {
+		alignment: center;
+
+		name := Text {
+			text: "Incremental";
+
+			font-size: 24px * root.size;
+			font-family: "Roboto";
+
+			stroke: black;
+			stroke-width: 2px;
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+		}
+
+		time := Text {
+			text: "00:00:00";
+
+			font-size: 48px * root.size;
+			font-family: "Roboto";
+
+			stroke: black;
+			stroke-width: 2px;
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+		}
+
+		utc-offset-display := Text {
+			text: "UTC  +00:00";
+
+			font-size: 16px * root.size;
+			font-family: "Roboto";
+
+			stroke: black;
+			stroke-width: 2px;
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+		}
+	}
+
+	@children
+}

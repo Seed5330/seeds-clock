@@ -1,0 +1,18 @@
+export component TouchBlock {
+	width: 1280px;
+	height: 720px;
+	
+	rectangle := Rectangle { background: black; opacity: 1; }
+	TouchArea {}
+
+	public function visible-with-opacity(opacity: float) {
+		self.visible = true;
+		rectangle.opacity = opacity;
+	}
+
+	public function invisible() {
+		self.visible = false;
+	}
+
+	@children
+}

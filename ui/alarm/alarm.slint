@@ -1,0 +1,166 @@
+import { Common } from "@seeds-clock/ui/common.slint";
+import { FakeTabSwitch } from "@seeds-clock/ui/common-parts/fake-tab-switch.slint";
+import { ColoredYScroll } from "@seeds-clock/ui/common-parts/colored-scroll.slint";
+
+
+
+import { FakeClock } from "fake-clock.slint";
+import { AlarmBar } from "alarm-bar/alarm-bar.slint";
+import { AlarmScroll } from "alarm-scroll.slint";
+import { AlarmDataChanger } from "alarm-data-changer/alarm-data-changer.slint";
+
+import { AlarmGlobals, AlarmData } from "globals.slint";
+import { TextWithBackround } from "@seeds-clock/ui/common-parts/text-with-background.slint";
+export { AlarmGlobals, AlarmData }
+
+import { Notification } from "triggered/notification.slint";
+import { TouchBlock } from "@seeds-clock/ui/common-parts/touch-block.slint";
+
+
+export component Alarm {
+	width: Common.window-width;
+	height: Common.window-height;
+
+	Rectangle { background: #F59D47; }
+
+
+	fake-clock := FakeClock {
+		y: 600px;
+
+		private property <int> hour: 13;
+		private property <int> minute: 55;
+
+		time-display: self.hour + "hr " + self.minute + "min";
+
+		Timer {
+			running: true;
+			interval: 1000ms;
+
+			triggered => {
+				parent.minute += 1;
+
+				if parent.minute == 60 {
+					parent.minute = 0;
+					parent.hour += 1;
+				}
+
+				
+			}
+		}
+
+		TouchArea {
+			clicked => {
+				notification.toggle(true);
+			}
+		}
+	}
+
+
+	AlarmScroll {
+		y: self.set-y();
+		pure function set-y() -> length {
+			let bar-height = 75px;
+			let window-center = root.height / 2;
+			let scroll-center = self.height / 2;
+
+			(window-center - scroll-center) + (bar-height / 2)
+		}
+
+		settings(index) => {
+			touch-block.visible-with-opacity(0.5);
+			alarm-data-changer.set-index(index);
+			alarm-data-changer.visible = true;
+		}
+	}
+
+	
+
+
+	touch-block := TouchBlock {
+		visible: false;
+	}
+
+	alarm-data-changer := AlarmDataChanger {
+		visible: false;
+
+		clicked => {
+			self.visible = false;
+			touch-block.invisible();
+
+			error-text.animated = false;
+			error-text.opacity = 0.0;
+		}
+
+		duplicate-error(time-display) => {
+			error-text.time-display = time-display;
+
+			error-text.animated = false;
+			error-text.opacity = 1.0;
+
+			error-text.animated = true;
+			error-text.opacity = 0.0;
+		}
+	}
+	
+	error-text := TextWithBackround {
+		y: 470px;
+
+		private property <string> time-display: "00:00";
+		text: "Alarm set for '" + self.time-display +"' already exists.";
+
+		background: #FC6A6A;
+		text-color: #F79C9C;
+
+		opacity: 0.0;
+		private property <bool> animated: true;
+		animate opacity {
+			enabled: self.animated;
+			delay: 2s;
+			duration: 3s;
+		}
+	}
+
+
+
+
+	notification := Notification {
+		y: -240px;
+
+		clicked => {
+			self.toggle(false);
+		}
+
+		private property <easing> easing: ease-in-quint;
+		animate y {
+			duration: 500ms;
+			easing: self.easing;
+		}
+
+		function toggle(toggle: bool) {
+			if toggle {
+				self.easing = ease-out-back;
+				self.y = 240px;
+				touch-block.visible-with-opacity(0.8);
+			}
+			else {
+				self.easing = ease-in-back;
+				self.y = -240px;
+				notification-timer.start();
+			}
+		}
+
+		notification-timer := Timer {
+			running: false;
+			interval: 700ms;
+
+			triggered => {
+				touch-block.invisible();
+				self.stop()
+			}
+		}
+	}
+
+
+
+	fake-tab-switch := FakeTabSwitch { y: 0px; }
+}
