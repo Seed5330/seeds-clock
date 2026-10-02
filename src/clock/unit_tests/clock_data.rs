@@ -5,8 +5,8 @@ use crate::ClockData;
 
 #[test]
 fn new_clock_data() {
-	let left = ClockData::new("Test Clock", 4, 20);
-	let right = ClockData {
+	let actual = ClockData::new("Test Clock", 4, 20);
+	let expected = ClockData {
 		name: "Test Clock".to_shared_string(),
 		hours_offset: 4,
 		minutes_offset: 20,
@@ -14,13 +14,13 @@ fn new_clock_data() {
 		utc_offset_display: "UTC  +04:20".to_shared_string(),
 	};
 
-	assert_eq!(left, right);
+	assert_eq!(actual, expected);
 }
 
 #[test]
 fn utc_offset_display() {
-	let left = ClockData::utc_offset_display(5, 30);
-	let right = "UTC  +05:30".to_shared_string();
+	let actual = ClockData::utc_offset_display(5, 30);
+	let expected = "UTC  +05:30".to_shared_string();
 
-	assert_eq!(left, right);
+	assert_eq!(actual, expected);
 }

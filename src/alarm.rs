@@ -6,6 +6,8 @@ pub mod unit_tests;
 pub mod values;
 pub mod callbacks;
 
+pub mod find_next_alarm;
+
 use std::rc::Rc;
 
 use slint::{Weak};

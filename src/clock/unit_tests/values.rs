@@ -6,7 +6,7 @@ use crate::clock::values;
 
 #[test]
 fn hours_offsets() {
-	let left_vec = vec![
+	let offsets_vec = vec![
 		"-12", "-11", "-10", "-09", "-08", "-07",
 		"-06", "-05", "-04", "-03", "-02", "-01",
 		"+00",
@@ -14,19 +14,19 @@ fn hours_offsets() {
 		"+08", "+09", "+10", "+11", "+12", "+13", "+14",
 	];
 
-	let left = left_vec
+	let expected = offsets_vec
 		.into_iter()
 		.map(SharedString::from)
 		.collect::<Vec<SharedString>>();
 
-	let right = values::hours_offset_vec();
+	let actual = values::hours_offset_vec();
 
-	pretty_assertions::assert_eq!(left, right);
+	pretty_assertions::assert_eq!(expected, actual);
 }
 
 #[test]
 fn minutes_offsets() {
-	let left_vec = vec![
+	let offsets_vec = vec![
 		"00", "01", "02", "03", "04", "05",
 		"06", "07", "08", "09", "10", "11",
 
@@ -43,12 +43,12 @@ fn minutes_offsets() {
 		"54", "55", "56", "57", "58", "59",
 	];
 
-	let left = left_vec
+	let expected = offsets_vec
 		.into_iter()
 		.map(SharedString::from)
 		.collect::<Vec<SharedString>>();
 
-	let right = values::minutes_offset_vec();
+	let actual = values::minutes_offset_vec();
 
-	pretty_assertions::assert_eq!(left, right);
+	pretty_assertions::assert_eq!(expected, actual);
 }

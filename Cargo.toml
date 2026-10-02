@@ -18,6 +18,7 @@ redb = "4.2.0"
 rodio = "0.22.2"
 pretty_assertions = "1.4.1"
 anyhow = "1.0.104"
+rand = "0.10.3"
 
 
 
