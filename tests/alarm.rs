@@ -1,14 +1,11 @@
 #![cfg(test)]
 
 mod alarm_tests;
-use std::rc::Rc;
 
 
 use slint::{ComponentHandle};
 use seeds_clock::{
-	self,
-	SlintProgram,
-	alarm::{alarm_struct::Alarm, callbacks, values},
+	self, SlintProgram, alarm::{self},
 };
 
 
@@ -20,11 +17,7 @@ fn alarm_load() {
 
 	slint_program.set_enabled_tabs([false, true, false, false].into());
 
-	let alarm = Alarm::new(slint_program.as_weak());
-	let alarm_rc = Rc::new(alarm);
-
-	values::initialize_values(alarm_rc.clone());
-	callbacks::initialize_callbacks(alarm_rc.clone());
+	alarm::load(slint_program.as_weak());
 
 	slint_program.run().unwrap();
 }

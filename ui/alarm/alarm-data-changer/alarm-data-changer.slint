@@ -7,7 +7,8 @@ import { ConfirmButtons } from "confirm-buttons.slint";
 
 export component AlarmDataChanger {
 	private property <bool> preview-mode <=> AlarmGlobals.preview-mode;
-	
+	private property <int> index: -1;
+
 	width: 280px;
 	height: 220px;
 
@@ -46,6 +47,8 @@ export component AlarmDataChanger {
 		// schedule
 	}
 
+	private property <[AlarmData]> alarm-list <=> AlarmGlobals.alarm_list;
+
 	callback clicked();
 	ConfirmButtons {
 		y: 185px;
@@ -53,7 +56,7 @@ export component AlarmDataChanger {
 		width: 240px;
 
 		delete => {
-			AlarmGlobals.remove-alarm(root.current-index);
+			root.alarm-list.remove(root.index);
 			root.clicked();
 		}
 
@@ -62,14 +65,13 @@ export component AlarmDataChanger {
 		}
 
 		save => {
-			root.save-alarm(root.current-index);
+			root.save-alarm(root.index);
 		}
 	}
 
 
-	private property <int> current-index: -1;
 	public function set-index(index: int) {
-		root.current-index = index;
+		root.index = index;
 
 		if index == -1 {
 			name-changer.name = "New Alarm";
@@ -107,18 +109,19 @@ export component AlarmDataChanger {
 		let hour = alarm-data.hour;
 		let minute = alarm-data.minute;
 
+		
 		if AlarmGlobals.has-time(hour, minute) {
-			let time-display = AlarmGlobals.get-time-display(hour, minute);
+			let time-display = AlarmGlobals.time-display(hour, minute);
 			root.duplicate-error(time-display);
 			return;
 		}
 
 
 		if index == -1 {
-			AlarmGlobals.add-alarm(alarm-data);
+			root.alarm-list.push(alarm-data);
 		}
 		else {
-			AlarmGlobals.modify-alarm(index, alarm-data)
+			root.alarm-list[index] = alarm-data;
 		}
 
 		root.clicked();

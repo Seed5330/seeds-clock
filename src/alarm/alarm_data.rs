@@ -1,4 +1,4 @@
-use slint::{SharedString, ToSharedString};
+use slint::{ToSharedString};
 
 use crate::AlarmData;
 
@@ -11,9 +11,5 @@ impl AlarmData {
 			schedule: schedule.into(),
 			toggled: toggled,
 		}
-	}
-
-	pub fn get_time_display(hour: usize, minute: usize) -> SharedString {
-		slint::format!("{:02}:{:02}", hour, minute)
 	}
 }

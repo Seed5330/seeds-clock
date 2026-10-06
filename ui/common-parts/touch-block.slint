@@ -5,13 +5,15 @@ export component TouchBlock {
 	rectangle := Rectangle { background: black; opacity: 1; }
 	TouchArea {}
 
-	public function visible-with-opacity(opacity: float) {
-		self.visible = true;
-		rectangle.opacity = opacity;
-	}
+	public function set-opacity(opacity: float) {
+		if opacity == 0.0 {
+			self.visible = false;
+		}
+		else {
+			self.visible = true;
+		}
 
-	public function invisible() {
-		self.visible = false;
+		rectangle.opacity = opacity;
 	}
 
 	@children

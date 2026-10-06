@@ -9,7 +9,14 @@ export struct AlarmData {
 export global AlarmGlobals {
 	in-out property <bool> preview-mode: true;
 
-	pure callback get-time-display(hour: int, minute: int) -> string;
+	pure callback backend-time-display(hour: int, minute: int) -> string;
+	public pure function time-display(hour: int, minute: int) -> string {
+		if root.preview-mode {
+			return hour + "h " + minute + "m";
+		}
+
+		backend-time-display(hour, minute)
+	}
 
 	in-out property <[string]> hour-scroll: [
 		"H", "O", "U", "R", "S", "C", "R", "O", "L", "L"
@@ -19,14 +26,9 @@ export global AlarmGlobals {
 		"M", "I", "N", "U", "T", "E", "S", "C", "R", "O", "L", "L"
 	];
 
-	callback add-alarm(alarm-data: AlarmData);
-	callback remove-alarm(index: int);
-	callback modify-alarm(index: int, alarm-data: AlarmData);
 
 	callback has-time(hour: int, minute: int) -> bool;
 
-
-	callback should-match-an-alarm(hour: int, minute: int);
 
 	in-out property <[AlarmData]> alarm_list: [
 		{

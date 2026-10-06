@@ -1,5 +1,4 @@
 pub mod alarm_struct;
-pub mod alarm_data;
 
 pub mod find_next_alarm;
 pub mod calculate_hour_difference;

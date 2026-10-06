@@ -1,4 +1,4 @@
-use slint::{ComponentHandle};
+use slint::{ComponentHandle, SharedString};
 
 use crate::SlintProgram;
 
@@ -17,4 +17,8 @@ pub fn load_tab(tab_index: usize) -> SlintProgram {
 
 	slint_program.set_enabled_tabs(tabs_visible.into());
 	slint_program.clone_strong()
+}
+
+pub fn get_time_display(hour: usize, minute: usize) -> SharedString {
+	slint::format!("{:02}:{:02}", hour, minute)
 }

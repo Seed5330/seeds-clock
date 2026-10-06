@@ -16,43 +16,39 @@ impl Time {
 }
 
 pub fn find_next_alarm(time_list: &Vec<Time>, given_time: &Time) -> Time {
-	let mut smallest_difference = 1000000;
-	let mut indexed = 0;
+	let mut smallest_difference = 100;
+	let mut selected_index = 0;
 
-	for (index, target_time) in time_list.iter().enumerate() {
-		let difference = {
-			let value = time_difference_in_minutes(&given_time, &target_time);
+	for (index, iter_time) in time_list.iter().enumerate() {
+		let hour_difference = calculate_hour_difference(given_time.hour, iter_time.hour);
 
-			if value == 0 {
-				24 * 60
+		if hour_difference < smallest_difference {
+			smallest_difference = hour_difference;
+			selected_index = index;
+		}
+		else if hour_difference == smallest_difference {
+			// The difference in hours is the same so now we have to compare minutes.
+
+			let minute_difference = calculate_minute_difference(given_time.minute, iter_time.minute);
+			if let Err(_) = minute_difference {
+				continue;
 			}
-			else {
-				value
+			else if let Ok(difference) = minute_difference {
+				if difference < time_list[selected_index].minute {
+					smallest_difference = hour_difference;
+					selected_index = index;
+					println!("New selected index is {}.", index);
+				}
 			}
-		};
-
-		if difference < smallest_difference {
-			smallest_difference = difference;
-			indexed = index;
 		}
 	}
 
-	time_list[indexed].clone()
+	println!("Final index is {}.", selected_index);
+	time_list[selected_index].clone()
 }
 
-pub fn time_difference_in_minutes(given_time: &Time, target_time: &Time) -> i32 {
-	let hourly_difference = calculate_hour_difference(given_time.hour, target_time.hour);
-	let minutes_comparison = calculate_minute_difference(given_time.minute, target_time.minute);
-
-	if hourly_difference == 0 && minutes_comparison.is_negative() {
-		return (24 * 60) + minutes_comparison;
-	}
-
-	(hourly_difference * 60) + minutes_comparison
-}
-
-pub fn calculate_hour_difference(given_hour: i32, target_hour: i32) -> i32 {
-	let mut modified_hour = given_hour;
+pub fn calculate_hour_difference(current_hour: i32, target_hour: i32) -> i32 {
+	let mut modified_hour = current_hour;
 	let mut difference = 0;
 
 	loop {
@@ -72,6 +68,10 @@ pub fn calculate_hour_difference(given_hour: i32, target_hour: i32) -> i32 {
 	difference
 }
 
-pub fn calculate_minute_difference(given_minute: i32, target_minute: i32) -> i32 {
-	target_minute - given_minute
+pub fn calculate_minute_difference(current_minute: i32, target_minute: i32) -> Result<i32> {
+	if current_minute > target_minute {
+		bail!("Given minute is larger than target minute.");
+	}
+
+	Ok(target_minute - current_minute)
 }

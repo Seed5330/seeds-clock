@@ -1,0 +1,32 @@
+import { TextWithBackround } from "@seeds-clock/ui/common-parts/text-with-background.slint";
+export component DuplicateAlarmError {
+	TextWithBackround {
+		text: "Alarm set for '" + root.time-display +"' already exists.";
+		text-color: #F79C9C;
+
+		background: #FC6A6A;
+	}
+	
+	private property <string> time-display: "00:00";
+	public function set-time-display(time-display: string) {
+		root.time-display = time-display;
+		
+		self.animated = false;
+		self.opacity = 1.0;
+		
+		self.animated = true;
+		self.opacity = 0.0;
+	}	
+
+	private property <bool> animated: true;
+	animate opacity {
+		enabled: self.animated;
+		delay: 2s;
+		duration: 3s;
+	}
+
+	public function toggle-off() {
+		self.animated = false;
+		self.opacity = 0.0;
+	}
+}
