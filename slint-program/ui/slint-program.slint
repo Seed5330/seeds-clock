@@ -1,0 +1,79 @@
+import { HelpersGlobals } from "@helpers/helpers.slint";
+
+import { PlaceholderTab } from "placeholder-tab.slint";
+import { TabProperties, TabSwitch } from "tab-switcher.slint";
+
+
+
+import { Clock, ClockGlobals, ClockData } from "@clock/clock.slint";
+import { Alarm, AlarmGlobals, AlarmData } from "@alarm/alarm.slint";
+
+export {
+	HelpersGlobals,
+	ClockGlobals, ClockData,
+	AlarmGlobals, AlarmData,
+}
+
+
+
+
+
+
+export component SlintProgram inherits Window {
+	title: "Slint Program";
+
+	width: 1200px;
+	height: (root.width / 16) * 9;
+
+	background: lightgray;
+
+	
+	pure function tab-properties-new(name: string, color: brush, visible: bool) -> TabProperties {
+		{name: name, color: color, visible: visible}
+	}
+
+	
+	in-out property <[bool]> enabled-tabs: [
+		true, false, false, false
+	];
+
+
+	clock := Clock { visible: root.enabled-tabs[0]; }
+	alarm := Alarm { visible: root.enabled-tabs[1];}
+	stopwatch := PlaceholderTab {
+		visible: root.enabled-tabs[2]; background: #120059; text: "Stopwatch";
+	}
+	timer := PlaceholderTab {
+		visible: root.enabled-tabs[3]; background: #27D8F5; text: "Timer";
+	}
+
+
+	property <[brush]> tab-colors: [
+		#A622E3, #F59D47, #120059, #27D8F5,
+	];
+	property <[string]> tab-names: [
+		"Clock", "Alarm", "Stopwatch", "Timer",
+	];
+
+	HorizontalLayout {
+		alignment: center;
+
+		for i in 4: TabSwitch {
+			color: root.tab-colors[i];
+			name: root.tab-names[i];
+
+			clicked => {
+				change-to-tab(i);
+			}
+		}
+	}
+
+	function change-to-tab(tab-id: int) {
+		enabled-tabs[0] = false;
+		enabled-tabs[1] = false;
+		enabled-tabs[2] = false;
+		enabled-tabs[3]= false;
+
+		enabled-tabs[tab-id] = true;
+	}
+}

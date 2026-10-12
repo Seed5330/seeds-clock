@@ -1,0 +1,124 @@
+component Settings {
+	width: 50px;
+	height <=> self.width;
+
+	Image {
+		width: 100%;
+		height: 100%;
+
+		source: @image-url("@assets/settings.png");
+		colorize: #9E3815;
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+	}
+
+	callback settings <=> touch-area.clicked;
+	touch-area := TouchArea {
+		mouse-cursor: pointer;
+
+		changed has-hover => {
+			if self.has-hover {
+				rectangle.opacity = 0.25;
+			}
+			else {
+				rectangle.opacity = 0.0;
+			}
+		}
+	}
+
+	rectangle := Rectangle {
+		background: white;
+		border-radius <=> root.width;
+
+		opacity: 0.0;
+		animate opacity {
+			duration: 100ms;
+		}
+	}
+}
+
+
+component Toggle {
+	width: 50px;
+	height <=> self.width;
+
+
+	Rectangle {
+		width <=> root.width;
+		height <=> root.width;
+
+		background: #DB864B;
+		border-radius <=> root.width;
+	}
+
+
+	image := Image {
+		width: 80%;
+		height <=> self.width;
+
+		source: @image-url("@assets/power_icon.png");
+		colorize: #70432C;
+
+		image-rendering: smooth;
+		image-fit: contain;
+
+		horizontal-alignment: center;
+		vertical-alignment: center;
+	}
+
+
+	callback toggle();
+	touch-area := TouchArea {
+		mouse-cursor: pointer;
+
+		changed has-hover => {
+			if self.has-hover {
+				rectangle.opacity = 0.1;
+			}
+			else {
+				rectangle.opacity = 0.0;
+			}
+		}
+
+		clicked => {
+			root.toggle();
+		}
+	}
+
+
+	rectangle := Rectangle {
+		background: white;
+		border-radius <=> root.width;
+
+		opacity: 0.0;
+		animate opacity {
+			duration: 100ms;
+		}
+	}
+}
+export component AlarmButtons {
+	width: 100px;
+	height: 50px;
+
+	in property <brush> background <=> rectangle.background;
+	rectangle := Rectangle {
+		background: green;
+	}
+
+
+	callback settings <=> settings.settings;
+	callback toggle <=> toggle.toggle;
+
+	HorizontalLayout {
+		alignment: space-between;
+		cross-axis-alignment: center;
+
+		settings := Settings {
+			width: root.height - 10px;
+		}
+		toggle := Toggle {
+			width: root.height - 20px;
+		}
+	}
+}

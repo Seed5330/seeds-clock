@@ -1,0 +1,96 @@
+import { DaysBar } from "days-bar.slint";
+import { TextWithBackround  } from "@helpers/helpers.slint";
+import { AlarmButtons } from "alarm-buttons.slint";
+
+
+export component AlarmBar {
+	in property <float> size: 1.0;
+
+	width: 660px * root.size;
+	height: 50px * root.size;
+
+	private property <brush> debug-background: transparent;
+
+	rectangle := Rectangle {
+		background: #E8421C;
+		border-radius: 16px;
+
+		border-color: #ED6947;
+		border-width: 2px;
+	}
+
+
+	in property <string> time-display <=> time-display.text;
+	time-display := TextWithBackround {
+		x: 10px;
+
+		width: 90px;
+		height: self.font-size + 10px;
+		
+
+		background <=> root.debug-background;
+
+		text: "00:00";
+		font-size: root.height / 1.75;
+		alignment: start;
+	}
+
+
+	in property <[bool]> schedule <=> days-bar.scheduled-days;
+	days-bar := DaysBar {
+		x: 100px;
+
+		size: 0.5;
+		width: 250px;
+
+		rectangle-background <=> root.debug-background;
+		
+		enabled-day-color: #F2AD27;
+		disabled-day-color: rectangle.background.darker(0.2);
+	}
+
+
+	in property <string> name <=> name.text;
+	name := TextWithBackround {
+		x: 330px;
+
+		width: 240px;
+		height: self.font-size + 10px;
+		
+		background <=> root.debug-background;
+
+		text: "COUNTERSCOUNTERS";
+		font-size: root.height / 2.5 * root.size;
+		alignment: end;
+	}
+
+
+	callback settings <=> alarm-buttons.settings;
+	callback toggle <=> alarm-buttons.toggle;
+	alarm-buttons := AlarmButtons {
+		x: 570px;
+		width: 75px;
+		background <=> root.debug-background;
+
+		settings => {}
+		toggle => {
+			if root.toggled {
+				root.toggled = false;
+			}
+			else {
+				root.toggled = true
+			}
+		}
+	}
+
+
+	in-out property <bool> toggled: true;
+	toggle-status := Rectangle {
+		background: black;
+		border-radius <=> rectangle.border-radius;
+
+		opacity: root.toggled ? 0.0 : 0.5;
+	}
+
+	@children
+}

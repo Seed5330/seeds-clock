@@ -1,0 +1,52 @@
+import { ScrollChange } from "@helpers/helpers.slint";
+
+export component UTCOffsetChanger {
+	in property <bool> preview-mode: true;
+	in property <float> size: 1.0;
+
+	width: (hours-offset-select.width * 2) + (horizontal-layout.spacing * 3);
+	height <=> hours-offset-select.height;
+
+
+	public function set-indexes-at-offset(hours-offset: int, minutes-offset: int) {
+		let hours-offset-indexed = hours-offset + 12;
+		let minutes-offset-indexed = minutes-offset;
+
+		hours-offset-select.set-index(hours-offset-indexed);
+		minutes-offset-select.set-index(minutes-offset-indexed);
+	}
+	
+	in property <[string]> hours-offset-scroll <=> hours-offset-select.scroll-select;
+	in property <[string]> minutes-offset-scroll <=> minutes-offset-select.scroll-select;
+	horizontal-layout := HorizontalLayout {
+		alignment: center;
+		cross-axis-alignment: center;
+
+		spacing: 10px;
+		
+		padding-left <=> self.spacing;
+		padding-right <=> self.spacing;
+
+
+
+		hours-offset-select := ScrollChange {
+			preview-mode <=> root.preview-mode;
+			size <=> root.size;
+			background: transparent;
+		}
+
+		minutes-offset-select := ScrollChange {
+			preview-mode <=> root.preview-mode;
+			size <=> root.size;
+			background: transparent;
+		}
+	}
+
+	public pure function get-hours-offset() -> int{
+		hours-offset-select.get-index() - 12
+	}
+
+	public pure function get-minutes-offset() -> int {
+		minutes-offset-select.get-index()
+	}
+} // END - GMTOffsetChanger

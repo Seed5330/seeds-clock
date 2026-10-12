@@ -1,25 +1,41 @@
 {
 	"folders": [
 		{
-			"name": "seeds-common",
-			"path": "../CommonScripts/seeds-common"
-		},
-		{
 			"name": "seeds-clock",
 			"path": "."
 		},
 		{
-			"name": "src",
-			"path": "src"
+			"name": "bin",
+			"path": "bin"
 		},
 		{
-			"name": "ui",
-			"path": "ui"
+			"name": "helpers",
+			"path": "helpers"
 		},
 		{
-			"name": "tests",
-			"path": "tests"
+			"name": "slint-program",
+			"path": "slint-program"
+		},
+		{
+			"name": "clock",
+			"path": "clock"
+		},
+		{
+			"name": "alarm",
+			"path": "alarm"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"slint.libraryPaths": {
+
+
+			"root": "",
+			"slint-program": "slint-program/ui",
+			"helpers": "helpers/ui",
+			"assets": "assets",
+			"alarm": "alarm/ui",
+			"clock": "clock/ui",
+			
+		}
+	}
 }

@@ -1,29 +1,16 @@
-[package]
-name = "seeds-clock"
-version = "0.1.0"
-edition = "2024"
+[workspace]
+members = ["bin", "helpers", "clock", "alarm", "slint-program"]
+resolver = "3"
 
-[dependencies]
-seeds-common = { path = "C:/Users/seed5/Desktop/Programming/--Rust--/CommonScripts/seeds-common" }
-
+[workspace.dependencies]
 slint = { version = "1.18.1", features = ["renderer-skia", "backend-winit"] }
 slint-interpreter = "1.18.1"
+slint-build = "1.18.1"
 i-slint-backend-testing = "1.18.1"
 
-chrono = "0.4.45"
-clock = "0.4.0"
-chrono-tz = "0.10.4"
-speedy = "0.8.7"
-redb = "4.2.0"
-rodio = "0.22.2"
-pretty_assertions = "1.4.1"
-anyhow = "1.0.104"
-rand = "0.10.3"
 
 
 
-[build-dependencies]
-slint-build = "1.18.1"
 
 [profile.dev]
 opt-level = 1

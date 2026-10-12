@@ -1,0 +1,16 @@
+[package]
+name = "bin"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slint = { workspace = true }
+anyhow = "1.0.104"
+helpers = { path = "../helpers" }
+clock = { path = "../clock" }
+alarm = { path = "../alarm" }
+slint-program = { path = "../slint-program" }
+
+
+[build-dependencies]
+slint-build = { workspace = true }

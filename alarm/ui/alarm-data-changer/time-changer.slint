@@ -1,0 +1,46 @@
+import { ScrollChange } from "@helpers/helpers.slint";
+
+export component TimeChanger {
+	in property <bool> preview-mode: true;
+	in property <float> size: 1.0;
+
+	width: 100px * (root.size * root.size);
+	height <=> hour-change.height;
+
+	in property <brush> background: yellow;
+
+	in property <[string]> hour-scroll <=> hour-change.scroll-select;
+	in property <[string]> minute-scroll <=> minute-change.scroll-select;
+	HorizontalLayout {
+		alignment: space-between;
+
+		hour-change := ScrollChange {
+			preview-mode: root.preview-mode;
+			size <=> root.size;
+
+			debug-name: "Hour Setter";
+			background <=> root.background;
+		}
+
+		minute-change := ScrollChange {
+			preview-mode: root.preview-mode;
+			size <=> root.size;
+			
+			debug-name: "Minute Setter";
+			background <=> root.background;
+		}	
+	}
+
+	public pure function get-hour() -> int {
+		hour-change.get-index()
+	}
+
+	public pure function get-minute() -> int {
+		minute-change.get-index()
+	}
+
+	public function set-time(hour: int, minute: int) {
+		hour-change.set-index(hour);
+		minute-change.set-index(minute);
+	}
+}

@@ -1,0 +1,13 @@
+[package]
+name = "alarm"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slint = { workspace = true }
+slint-program = { path = "../slint-program" }
+helpers = { path = "../helpers" }
+anyhow = "1.0.104"
+rand = "0.10.3"
+pretty_assertions = "1.4.1"
+

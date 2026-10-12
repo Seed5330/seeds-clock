@@ -1,0 +1,102 @@
+import { HelpersGlobals } from "@helpers/helpers.slint";
+import { FakeTabSwitch } from "@helpers/fake-tab-switch.slint";
+
+import { ClockGlobals, ClockData } from "globals.slint";
+export { ClockGlobals, ClockData }
+
+import { ClockDataChanger, TouchBlock } from "clock-data-changer/clock-data-changer.slint";
+import { TimeDisplay } from "time-display.slint";
+
+import { ClocksScroll } from "clocks-scroll.slint";
+import { SettingsAndDelete } from "settings-and-delete.slint";
+import { DuplicateNameError } from "clock-data-changer/duplicate-name-error.slint";
+
+
+
+
+export component Clock {
+	width: HelpersGlobals.window-width;
+	height: HelpersGlobals.window-height;
+
+	rectangle := Rectangle { background: #A622E3; }
+
+
+	time-display := TimeDisplay {
+		y: 100px;
+
+		background: #891599;
+
+		private property <ClockData> clock-data <=> ClockGlobals.local-clock;
+		name: clock-data.name;
+		time: clock-data.time;
+		utc-offset-display: clock-data.utc-offset-display;
+	}
+
+
+	ClocksScroll {
+		y: 330px;
+
+		clock-background: #A037BF;
+		layout-background: rectangle.background.darker(0.2);
+
+
+		settings(index) => {
+			clock-data-changer.set-clock-index(index);
+			clock-data-changer.visible = true;
+		}
+	}
+
+
+	TouchBlock {
+		visible: clock-data-changer.visible;
+
+		width: 100%;
+		height: 100%;
+	}
+
+	clock-data-changer := ClockDataChanger {
+		visible: false;
+
+		save-error (clock-name) => {
+			error-text.clock-name = clock-name;
+
+			error-text.on(true);
+		}
+
+		exit => {
+			error-text.on(false);
+		}
+	}
+
+	error-text := DuplicateNameError {
+		y: 410px;
+
+		opacity: 0;
+
+		private property <bool> animated: false;
+		animate opacity {
+			enabled: self.animated;
+			easing: ease-in-sine;
+
+			delay: 2s;
+			duration: 3s;
+		}
+
+		function on(enabled: bool) {
+			if enabled {
+				error-text.animated = false;
+				error-text.opacity = 1.0;
+
+				error-text.animated = true;
+				error-text.opacity = 0.0;
+			}
+			else {
+				error-text.animated = false;
+				error-text.opacity = 0.0;
+			}
+		}
+	}
+
+
+	FakeTabSwitch { y: 0px; }
+}

@@ -1,0 +1,11 @@
+[package]
+name = "slint-program"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+slint = { workspace = true }
+i-slint-backend-testing = { workspace = true }
+
+[build-dependencies]
+slint-build = { workspace = true }

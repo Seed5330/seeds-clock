@@ -1,0 +1,93 @@
+import { ColoredYScroll } from "@helpers/helpers.slint";
+import { ClockGlobals, ClockData } from "globals.slint";
+
+import { TimeDisplay } from "time-display.slint";
+import { SettingsAndDelete } from "settings-and-delete.slint";
+
+
+export component ClocksScroll {
+	width: clock-in-layout.width * 1.2;
+
+	height: self.set-height();
+	pure function set-height() -> length {
+		let clocks-count = 3;
+		let clocks-height-pixels = clock-in-layout.height * clocks-count;
+		let layout-spacing-pixels = colored-y-scroll.spacing * (clocks-count + 1);
+
+		clocks-height-pixels + layout-spacing-pixels
+	}
+
+
+	in property <brush> clock-background <=> clock-in-layout.background;
+	clock-in-layout := TimeDisplay {
+		visible: false;
+
+		size: 0.6;
+		// width
+		// height
+
+		background: lime;
+	}
+
+
+	callback settings(index: int);
+
+	in property <brush> layout-background <=> colored-y-scroll.background;
+	colored-y-scroll := ColoredYScroll {
+		width: 100%;
+		height: 100%;
+
+		background: cyan;
+
+		private property <[ClockData]> clocks <=> ClockGlobals.clock-list;
+		for clock[i] in self.clocks: TimeDisplay {
+			size <=> clock-in-layout.size;
+			background: clock-in-layout.background;
+
+			name: clock.name;
+			time: clock.time;
+			utc-offset-display: clock.utc-offset-display;
+
+			SettingsAndDelete {
+				y: 5px;
+
+				width: parent.width * 0.9;
+				height: 20px;
+
+				delete => {
+					ClockGlobals.remove-clock(i);
+				}
+
+				settings => {
+					root.settings(i);
+				}
+			}
+		}
+
+		Rectangle {
+			width: clock-in-layout.width;
+			height: clock-in-layout.height;
+
+			background: clock-in-layout.background;
+			border-radius: clock-in-layout.border-radius;
+
+			Image {
+				width: self.height;
+				height: parent.height * 0.8;
+
+				source: @image-url("@assets/plus.png");
+				colorize: lightgray;
+
+				image-rendering: smooth;
+			}
+
+			new-clock := TouchArea {
+				mouse-cursor: pointer;
+
+				clicked => {
+					root.settings(-1);
+				}
+			}
+		}
+	}
+}

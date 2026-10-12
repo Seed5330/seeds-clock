@@ -1,0 +1,69 @@
+import { TextWithBackround, ButtonText, CommonText } from "@helpers/helpers.slint";
+
+
+export component NewAlarm {
+	in property <float> size: 1.0;
+
+	width: 660px * root.size;
+	height: 50px * root.size;
+
+	rectangle := Rectangle {
+		background: #E8421C;
+		border-radius: 16px;
+
+		border-color: #ED6947;
+		border-width: 2px;
+	}
+
+
+	button-background := Rectangle {
+		width: 170px;
+		height: 30px;
+
+		background: #F29B27;
+		border-radius: 8px;
+	}
+
+
+	CommonText {
+		x: 265px;
+		text: "New Alarm";
+	}
+
+	Image {
+		x: 375px;
+
+		width: 20px;
+		height <=> self.width;
+
+		source: @image-url("@assets/red_cross.png");
+		colorize: black;
+	}
+
+
+	callback clicked <=> touch-area.clicked;
+	touch-area := TouchArea {
+		width <=> button-background.width;
+		height <=> button-background.height;
+
+		mouse-cursor: pointer;
+	}
+
+	hover-rectangle := Rectangle {
+		width <=> button-background.width;
+		height <=> button-background.height;
+
+		background: white;
+		border-radius <=> button-background.border-radius;
+
+		opacity: touch-area.has-hover ?
+			0.2 : 0.0;
+
+		animate opacity {
+			duration: 100ms;
+		}
+	}
+
+
+	@children
+}
