@@ -1,0 +1,19 @@
+import { AlarmGlobals } from "@alarm/globals.slint";
+import { TextWithBackround } from "@helpers/helpers.slint";
+
+
+export component NextAlarm {
+	in-out property <int> hour: 12;
+	in-out property <int> minute: 0;
+
+	text-with-background := TextWithBackround {
+		text: "Next Alarm: " + AlarmGlobals.time-display(root.hour, root.minute);
+		background: #E0704C;
+		border-radius: 8px;
+	}
+	
+	public pure function matches-time(hour: int, minute: int) -> bool {
+		if hour == root.hour && minute == root.minute { return true; }
+		else { return false; }
+	}
+}

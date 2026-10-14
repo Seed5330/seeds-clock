@@ -16,5 +16,9 @@ i-slint-backend-testing = "1.18.1"
 opt-level = 1
 debug = true
 
+[profile.dev.package."*"]
+opt-level = 2
+debug = true
+
 [profile.release]
 opt-level = 2

@@ -1,11 +1,12 @@
 #![cfg(test)]
 use rand::seq::SliceRandom;
-use crate::find_next_alarm::{Time, find_next_alarm};
+use crate::time_struct::Time;
+use crate::find_nearest_time::{find_nearest_time};
 
 
 
 #[test]
-fn find_nearby_alarm() {
+fn find_nearby_time() {
 	let time = Time::new(20, 40);
 	let mut time_list = vec![
 		Time::new(20, 20),
@@ -23,14 +24,13 @@ fn find_nearby_alarm() {
 	let mut rng = rand::rng();
 	for i in 0..=100 {
 		time_list.shuffle(&mut rng);
-		let actual = find_next_alarm(&time_list, &time);
-
+		let actual = find_nearest_time(&time_list, &time);
 		assert_eq!(actual, expected, "Panicked at iteration {}.", i);
 	}
 }
 
 #[test]
-fn alarm_is_next_day() {
+fn time_is_next_day() {
 	let time = Time::new(23, 30);
 	let mut time_list = vec![
 		Time::new(23, 25),
@@ -48,14 +48,13 @@ fn alarm_is_next_day() {
 	let mut rng = rand::rng();
 	for i in 0..=100 {
 		time_list.shuffle(&mut rng);
-		let actual = find_next_alarm(&time_list, &time);
-
+		let actual = find_nearest_time(&time_list, &time);
 		assert_eq!(actual, expected, "Panicked at iteration {}.", i);
 	}	
 }
 
 #[test]
-fn alarm_is_not_the_given_time() {
+fn time_is_not_the_given_time() {
 	let time = Time::new(4, 20);
 	let mut time_list = vec![
 		Time::new(23, 25),
@@ -73,8 +72,7 @@ fn alarm_is_not_the_given_time() {
 	let mut rng = rand::rng();
 	for i in 0..=100 {
 		time_list.shuffle(&mut rng);
-		let actual = find_next_alarm(&time_list, &time);
-
+		let actual = find_nearest_time(&time_list, &time);
 		assert_eq!(actual, expected, "Panicked at iteration {}.", i);
 	}	
 }
@@ -98,34 +96,7 @@ fn time_list_has_same_hour_as_given_time() {
 	let mut rng = rand::rng();
 	for i in 0..=100 {
 		time_list.shuffle(&mut rng);
-		let actual = find_next_alarm(&time_list, &time);
-
+		let actual = find_nearest_time(&time_list, &time);
 		assert_eq!(actual, expected, "Panicked at iteration {}.", i);
 	}	
-}
-
-
-#[test]
-#[ignore = "This test will always panic just to show results."]
-fn time_list_display() {
-	let time_list = generate_time_list(20, 50);
-
-	println!("{:#?}", time_list);
-	println!("Time list size is {}.", time_list.len());
-	panic!()
-}
-
-fn generate_time_list(min_size: usize, max_size: usize) -> Vec<(i32, i32)> {
-	let mut time_list = vec![];
-
-	for hour in 0..24 {
-		for minute in 0..60 {
-			time_list.push((hour, minute));
-		}
-	}
-
-	time_list.shuffle(&mut rand::rng());
-	time_list.truncate(rand::random_range(min_size..=max_size));
-
-	time_list
 }

@@ -1,4 +1,4 @@
-import { AlarmGlobals, AlarmData } from "../globals.slint";
+import { AlarmGlobals, AlarmData, Time } from "../globals.slint";
 import { NameChanger } from "name-changer.slint";
 import { TimeChanger } from "time-changer.slint";
 import { Scheduler } from "scheduler.slint";
@@ -82,7 +82,7 @@ export component AlarmDataChanger {
 
 		let alarm-data = AlarmGlobals.alarm_list[index];
 		name-changer.name = alarm-data.name;
-		time-changer.set-time(alarm-data.hour, alarm-data.minute);
+		time-changer.set-time(alarm-data.time.hour, alarm-data.time.minute);
 
 		scheduler.schedule = [
 			alarm-data.schedule[0],
@@ -99,19 +99,17 @@ export component AlarmDataChanger {
 	function save-alarm(index: int) {
 		let alarm-data = {
 			name: name-changer.name,
-			hour: time-changer.get-hour(),
-			minute: time-changer.get-minute(),
+			time: {
+				hour: time-changer.get-hour(),
+				minute: time-changer.get-minute(),
+			},
 			schedule: scheduler.schedule,
 			toggled: index == -1 ?
 				true : AlarmGlobals.alarm_list[index].toggled,
 		};
-
-		let hour = alarm-data.hour;
-		let minute = alarm-data.minute;
-
 		
-		if AlarmGlobals.has-time(hour, minute) {
-			let time-display = AlarmGlobals.time-display(hour, minute);
+		if AlarmGlobals.has-time(alarm-data.time) {
+			let time-display = AlarmGlobals.time-display(alarm-data.time.hour, alarm-data.time.minute);
 			root.duplicate-error(time-display);
 			return;
 		}

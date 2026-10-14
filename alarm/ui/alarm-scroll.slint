@@ -32,8 +32,8 @@ export component AlarmScroll {
 		for alarm[i] in AlarmGlobals.alarm_list: AlarmBar {
 			size: 1;
 
-			private property <int> hour: alarm.hour;
-			private property <int> minute: alarm.minute;
+			private property <int> hour: alarm.time.hour;
+			private property <int> minute: alarm.time.minute;
 
 			name <=> alarm.name;
 			schedule <=> alarm.schedule;

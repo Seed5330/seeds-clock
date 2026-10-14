@@ -18,29 +18,29 @@ mod tests {
 	#[test]
 	fn both_time_values_are_2_digits() {
 		let actual = time_display(19, 30).unwrap();
-		let expect = "19:30";
-		assert_eq!(actual, expect);
+		let expected = "19:30";
+		assert_eq!(actual, expected);
 	}
 
 	#[test]
 	fn hour_value_is_one_digit() {
 		let actual = time_display(2, 45).unwrap();
-		let expect = "02:45";
-		assert_eq!(actual, expect);
+		let expected = "02:45";
+		assert_eq!(actual, expected);
 	}
 
 	#[test]
 	fn minute_value_is_one_digit() {
 		let actual = time_display(23, 0).unwrap();
-		let expect = "23:00";
-		assert_eq!(actual, expect);
+		let expected = "23:00";
+		assert_eq!(actual, expected);
 	}
 
 	#[test]
 	fn both_times_values_are_1_digit() {
 		let actual = time_display(3, 5).unwrap();
-		let expect = "03:05";
-		assert_eq!(actual, expect);
+		let expected = "03:05";
+		assert_eq!(actual, expected);
 	}
 
 	#[test]

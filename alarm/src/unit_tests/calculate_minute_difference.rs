@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use crate::find_next_alarm::calculate_minute_difference;
+use crate::find_nearest_time::calculate_minute_difference;
 
 #[test]
 fn small_difference() {

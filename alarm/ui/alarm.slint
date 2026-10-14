@@ -6,7 +6,7 @@ import {
 from "@helpers/helpers.slint";
 
 import {
-	FakeClock, Notification, DuplicateAlarmError
+	FakeClock, Notification, DuplicateAlarmError, NextAlarm
 }
 from "accessories/accessories.slint";
 
@@ -14,9 +14,9 @@ import { AlarmBar } from "alarm-bar/alarm-bar.slint";
 import { AlarmScroll } from "alarm-scroll.slint";
 import { AlarmDataChanger } from "alarm-data-changer/alarm-data-changer.slint";
 
-import { AlarmGlobals, AlarmData } from "globals.slint";
+import { AlarmGlobals, AlarmData, Time } from "globals.slint";
 
-export { AlarmGlobals, AlarmData }
+export { AlarmGlobals, AlarmData, Time }
 
 
 
@@ -25,6 +25,11 @@ export component Alarm {
 	height: HelpersGlobals.window-height;
 
 	Rectangle { background: #F59D47; }
+
+
+	pure function time-display(hour: int, minute: int) -> string {
+		AlarmGlobals.time-display(hour, minute)
+	}
 
 
 	fake-clock := FakeClock {
@@ -55,12 +60,27 @@ export component Alarm {
 	}
 
 
-	TextWithBackround {
+	next-alarm := NextAlarm {
 		y: 120px;
-		text: "Next Alarm: 00:00";
-		background: #E0704C;
-		border-radius: 8px;
+
+		function set-time(time: Time) {
+			self.hour = time.hour;
+			self.minute = time.minute;
+		}
 	}
+
+	Timer {
+		running: true;
+		interval: 500ms;
+
+		triggered => {
+			// if next-alarm.matches-time(fake-clock.hour, fake-clock.minute) {
+			// 	notification.toggle(true);
+			// }
+		}
+	}
+
+
 
 
 	touch-block := TouchBlock {
@@ -102,6 +122,8 @@ export component Alarm {
 
 	notification := Notification {
 		y: -240px;
+
+		time-display: root.time-display(fake-clock.hour, fake-clock.minute);
 
 		clicked => {
 			self.toggle(false);

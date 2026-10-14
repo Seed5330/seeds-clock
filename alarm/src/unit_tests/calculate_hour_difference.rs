@@ -1,6 +1,6 @@
 #![cfg(test)]
 
-use crate::find_next_alarm::calculate_hour_difference;
+use crate::find_nearest_time::calculate_hour_difference;
 
 #[test]
 fn hour_difference() {
