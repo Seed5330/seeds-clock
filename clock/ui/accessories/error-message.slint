@@ -1,4 +1,4 @@
-export component DuplicateNameError {
+export component ErrorMessage {
 	width: width-text.width + 20px;
 	height: 30px;
 
@@ -19,15 +19,12 @@ export component DuplicateNameError {
 		font-family <=> error-text.font-family;
 	}
 
-	in property <string> clock-name: "CLOCKSCLOCKS";
+	in property <string> text <=> error-text.text;
 	error-text := Text {
 		width: 100%;
 		height: 100%;
 
-		text:
-			"Clock with the name  '" +
-			root.clock-name +
-			"'  already exists.";
+		text: "Error Message Here";
 		color: #FFA3B0;
 
 		font-size: 16px;

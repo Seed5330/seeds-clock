@@ -1,25 +1,13 @@
 import { UTCOffsetChanger } from "utc-offset-changer.slint";
 import { NameChange } from "name-change.slint";
-import { CancelAndSave } from "cancel-and-save.slint";
-import { ClockGlobals, ClockData } from "../globals.slint";
-
-export component TouchBlock {
-	width: 500px;
-	height: 500px;
-	
-	Rectangle {
-		background: black;
-		opacity: 0.25;
-	}
-
-	TouchArea {}
-}
+import { ConfirmButtons } from "confirm-buttons.slint";
+import { ClockGlobals, ClockData, ClockNameValidity } from "../globals.slint";
 
 export component ClockDataChanger {
 	visible: true;
 
-	width: 200px;
-	height: 125px;
+	width: 300px;
+	height: 200px;
 
 
 	rectangle := Rectangle {
@@ -29,84 +17,106 @@ export component ClockDataChanger {
 	}
 
 
+	private property <int> clock-index: -1;
+	private property <[ClockData]> clock-list <=> ClockGlobals.clock-list;
+
+
 	name-change := NameChange {
-		y: 10px;
-		size: 1.0;
+		y: 15px;
+		size: 1.2;
 
 		background: #C732AE;
-
-		private property <string> previous-name: self.text;
-		changed text => {
-			if ClockGlobals.exceeds-character-limit(self.text) {
-				self.text = self.previous-name;
-			}
-			else {
-				self.previous-name = self.text;
-			}
-		}
 	}
 
 	utc-offset-changer := UTCOffsetChanger {
 		preview-mode: ClockGlobals.preview-mode;
 
-		y: 42.5px;
-		size: 1.2;
+		y: 60px;
+		size: 2;
+
+		width: 180px;
 
 		hours-offset-scroll <=> ClockGlobals.hours-offset-scroll;
 		minutes-offset-scroll <=> ClockGlobals.minutes-offset-scroll;
 	}	
 
 	callback exit();
-	callback save-error(clock-name: string);
-	cancel-and-save := CancelAndSave {
-		y: 95px;
-		size: 0.9;
+	callback error-message(message: string);
+	confirm-buttons := ConfirmButtons {
+		y: 155px;
+		size: 1;
+
+		delete => {
+			if root.clock-index != -1 {
+				root.clock-list.remove(root.clock-index);
+				root.exit();
+			}
+		}
 
 		cancel => {
-			root.visible = false;
 			root.exit();
 		}
 
-		private property <int> clock-index: -1;
 		save => {
-			if ClockGlobals.has-clock(name-change.text) {
-				root.save-error(name-change.text);
+			let index = root.clock-index;
+			let clock-data = {
+				name: name-change.text,
+				hours-offset: utc-offset-changer.hours-offset(),
+				minutes-offset: utc-offset-changer.minutes-offset(),
+			};
+
+
+			let clock-name-validity = root.is-valid-clock-name(clock-data.name);
+
+			if clock-name-validity == Empty {
+				root.error-message("Please enter a clock name.");
+				return;
+			}
+			if clock-name-validity == HasEmoji {
+				root.error-message("Clock name cannot have emojis.");
+				return;
+			}
+			if clock-name-validity == Duplicate {
+				root.error-message("Clock with the name '" + clock-data.name + "' already exists.");
 				return;
 			}
 
-			let clock-name = name-change.text;
-			let hours-offset = utc-offset-changer.get-hours-offset();
-			let minutes-offset = utc-offset-changer.get-minutes-offset();
+			
+			if index == -1 {
+				root.clock-list.push(clock-data);
+			}
+			else {
+				root.clock-list[index] = clock-data;
+			}
 
-			let index = self.clock-index;
-			let clock-data = ClockGlobals.clock-data-new(
-				clock-name, hours-offset, minutes-offset
-			);
-
-			ClockGlobals.save-clock(index, clock-data);
-			root.visible = false;
 			root.exit();
 		}
 	}
 
 
+	pure function is-valid-clock-name(clock-name: string) -> ClockNameValidity {
+		if ClockGlobals.has-clock-name(clock-name) {
+			return Duplicate;
+		}
+		else {
+			return ClockGlobals.is-valid-clock-name(clock-name);
+		}
+	}
+
+
 	public function set-clock-index(index: int) {
-		cancel-and-save.clock-index = index;
+		root.clock-index = index;
 
 		if index == -1 {
-			name-change.text = "New Clock";
-			name-change.previous-name = name-change.text;
-
-			utc-offset-changer.set-indexes-at-offset(0, 0);
+			name-change.try_set_text("New Clock");
+			utc-offset-changer.set-utc-offset(0, 0);
 			return;
 		}
 
-		let clock-data = ClockGlobals.clock-list[index];
+		let clock-data = root.clock-list[index];
 
-		name-change.text = clock-data.name;
-		name-change.previous-name = name-change.text;
-
-		utc-offset-changer.set-indexes-at-offset(
+		name-change.try_set_text(clock-data.name);
+		utc-offset-changer.set-utc-offset(
 			clock-data.hours-offset, clock-data.minutes-offset,
 		);
 	}

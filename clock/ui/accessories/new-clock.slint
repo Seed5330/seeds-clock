@@ -1,0 +1,58 @@
+import { TextWithBackround, ButtonText, CommonText } from "@helpers/helpers.slint";
+
+
+export component NewClock {
+	in property <float> size: 1.0;
+
+	width: 170px * root.size;
+	height: 30px * root.size;
+
+
+	in property <brush> background <=> button-background.background;
+	button-background := Rectangle {
+		background: cyan;
+		border-radius: 8px;
+	}
+
+
+	CommonText {
+		x: 15px * root.size;
+
+		text: "New Clock";
+		font-size: 20px * root.size;
+	}
+
+	Image {
+		x: 130px * root.size;
+
+		width: 20px * root.size;
+		height <=> self.width;
+
+		source: @image-url("@assets/red_cross.png");
+		colorize: black;
+	}
+
+
+	callback clicked <=> touch-area.clicked;
+	touch-area := TouchArea {
+		width <=> button-background.width;
+		height <=> button-background.height;
+
+		mouse-cursor: pointer;
+	}
+
+	hover-rectangle := Rectangle {
+		width <=> button-background.width;
+		height <=> button-background.height;
+
+		background: white;
+		border-radius <=> button-background.border-radius;
+
+		opacity: touch-area.has-hover ?
+			0.2 : 0.0;
+
+		animate opacity {
+			duration: 100ms;
+		}
+	}
+}

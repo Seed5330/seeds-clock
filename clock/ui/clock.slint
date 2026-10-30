@@ -1,17 +1,14 @@
-import { HelpersGlobals } from "@helpers/helpers.slint";
-import { FakeTabSwitch } from "@helpers/fake-tab-switch.slint";
+import "@assets/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf";
 
-import { ClockGlobals, ClockData } from "globals.slint";
-export { ClockGlobals, ClockData }
+import { HelpersGlobals, FakeTabSwitch, TouchBlock } from "@helpers/helpers.slint";
+import { TimeDisplay, ErrorMessage } from "accessories/accessories.slint";
 
-import { ClockDataChanger, TouchBlock } from "clock-data-changer/clock-data-changer.slint";
-import { TimeDisplay } from "time-display.slint";
-
+import { ClockDataChanger } from "clock-data-changer/clock-data-changer.slint";
 import { ClocksScroll } from "clocks-scroll.slint";
-import { SettingsAndDelete } from "settings-and-delete.slint";
-import { DuplicateNameError } from "clock-data-changer/duplicate-name-error.slint";
 
 
+import { ClockGlobals, ClockData, ClockNameValidity } from "globals.slint";
+export { ClockGlobals, ClockData, ClockNameValidity }
 
 
 export component Clock {
@@ -25,51 +22,57 @@ export component Clock {
 		y: 100px;
 
 		background: #891599;
+		interactive: false;
 
 		private property <ClockData> clock-data <=> ClockGlobals.local-clock;
 		name: clock-data.name;
-		time: clock-data.time;
-		utc-offset-display: clock-data.utc-offset-display;
+		utc-offset: {
+			hours-offset: self.clock-data.hours-offset,
+			minutes-offset: self.clock-data.minutes-offset,
+		};
 	}
 
 
 	ClocksScroll {
 		y: 330px;
 
-		clock-background: #A037BF;
-		layout-background: rectangle.background.darker(0.2);
-
-
 		settings(index) => {
 			clock-data-changer.set-clock-index(index);
-			clock-data-changer.visible = true;
+			clock-data-changer.toggle(true);
 		}
 	}
 
 
-	TouchBlock {
-		visible: clock-data-changer.visible;
+	touch-block := TouchBlock {
+		visible: false;
 
 		width: 100%;
 		height: 100%;
+
+		opacity: 0.5;
 	}
 
 	clock-data-changer := ClockDataChanger {
 		visible: false;
 
-		save-error (clock-name) => {
-			error-text.clock-name = clock-name;
-
-			error-text.on(true);
+		error-message(message) => {
+			error-message.text = message;
+			error-message.toggle(true);
 		}
 
 		exit => {
-			error-text.on(false);
+			error-message.toggle(false);
+			self.toggle(false)
+		}
+
+		function toggle(enabled: bool) {
+			self.visible = enabled;
+			touch-block.visible = enabled;
 		}
 	}
 
-	error-text := DuplicateNameError {
-		y: 410px;
+	error-message := ErrorMessage {
+		y: 440px;
 
 		opacity: 0;
 
@@ -82,17 +85,17 @@ export component Clock {
 			duration: 3s;
 		}
 
-		function on(enabled: bool) {
+		function toggle(enabled: bool) {
 			if enabled {
-				error-text.animated = false;
-				error-text.opacity = 1.0;
+				error-message.animated = false;
+				error-message.opacity = 1.0;
 
-				error-text.animated = true;
-				error-text.opacity = 0.0;
+				error-message.animated = true;
+				error-message.opacity = 0.0;
 			}
 			else {
-				error-text.animated = false;
-				error-text.opacity = 0.0;
+				error-message.animated = false;
+				error-message.opacity = 0.0;
 			}
 		}
 	}

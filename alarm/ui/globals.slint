@@ -1,14 +1,4 @@
-export struct Time {
-	hour: int,
-	minute: int,
-}
-
-export struct AlarmData {
-	name: string,
-	time: Time,
-	schedule: [bool],
-	toggled: bool,
-}
+import { AlarmData, Time } from "structs.slint";
 
 export global AlarmGlobals {
 	in-out property <bool> preview-mode: true;
@@ -37,7 +27,7 @@ export global AlarmGlobals {
 	in-out property <[AlarmData]> alarm_list: [
 		{
 			name: "COUNTERSCOUNTERS", toggled: true,
-			time: { hour: 12, minute: 0, },
+			time: { hour: 12, minute: 30, },
 			schedule: [true, true, true, true, true, false, false],
 		},
 		{

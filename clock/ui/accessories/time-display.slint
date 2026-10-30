@@ -1,0 +1,106 @@
+import { ClockGlobals } from "../globals.slint";
+
+export component TimeDisplay {
+	in property <float> size: 1.0;
+
+	width: 300px * root.size;
+	height: 150px * root.size;
+
+	private property <int> tick <=> ClockGlobals.ticks-elapsed;
+	
+	in property <brush> background <=> background.background;
+	out property <length> border-radius <=> background.border-radius;
+	background := Rectangle {
+		background: red;
+		border-radius: 16px;
+	}
+
+
+	in-out property <string> name <=> name.text;
+	in property <{hours-offset: int, minutes-offset: int}> utc-offset: {
+		hours-offset: 0,
+		minutes-offset: 0,
+	};
+
+	VerticalLayout {
+		alignment: center;
+
+		name := Text {
+			text: "ACKNOWLEDGEMENTS";
+
+			font-size: 24px * root.size;
+			font-family: "Roboto";
+
+			stroke: black;
+			stroke-width: 2px;
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+		}
+
+		time := Text {
+			text: root.utc-now(root.utc-offset.hours-offset, root.utc-offset.minutes-offset, root.tick);
+
+			font-size: 56px * root.size;
+			font-family: "Roboto";
+
+			stroke: black;
+			stroke-width: 4px;
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+		}
+
+		utc-offset-display := Text {
+			text: root.utc-offset-display(root.utc-offset.hours-offset, root.utc-offset.minutes-offset);
+
+			font-size: 20px * root.size;
+			font-family: "Roboto";
+
+			stroke: black;
+			stroke-width: 2px;
+
+			horizontal-alignment: center;
+			vertical-alignment: center;
+		}
+	}
+
+	pure function utc-now(hours-offset: int, minutes-offset: int, tick: int) -> string {
+		ClockGlobals.utc-now(hours-offset, minutes-offset)
+	}
+
+	pure function utc-offset-display(hours-offset: int, minutes-offset: int) -> string {
+		"UTC  " + ClockGlobals.utc-offset-display(hours-offset, minutes-offset)
+	}
+
+
+	hover := Rectangle {
+		background: white;
+		border-radius <=> background.border-radius;
+
+		opacity: 0;
+		animate opacity {
+			duration: 100ms;
+		}
+	}
+
+	in property <bool> interactive <=> touch-area.enabled;
+	callback clicked <=> touch-area.clicked;
+	touch-area := TouchArea {
+		enabled: true;
+
+		width: 100%;
+		height: 100%;
+
+		mouse-cursor: pointer;
+
+		changed has-hover => {
+			if self.has-hover {
+				hover.opacity = 0.25;
+			}
+			else {
+				hover.opacity = 0.0;
+			}
+		}
+	}
+}

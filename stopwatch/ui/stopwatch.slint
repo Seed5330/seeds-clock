@@ -1,0 +1,19 @@
+import { HelpersGlobals, FakeTabSwitch } from "@helpers/helpers.slint";
+import { CommonText } from "@helpers/helpers.slint";
+
+
+export component Stopwatch {
+	width: HelpersGlobals.window-width;
+	height: HelpersGlobals.window-height;
+
+	Rectangle {
+		background: #120059;
+	}
+
+	CommonText {
+		text: "Stopwatch";
+		font-size: 96px;
+	}
+
+	fake-tab-switch := FakeTabSwitch { y: 0px; }
+}

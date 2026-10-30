@@ -10,4 +10,5 @@ helpers = { path = "../helpers" }
 anyhow = "1.0.104"
 rand = "0.10.3"
 pretty_assertions = "1.4.1"
+redb = "4.4.0"
 

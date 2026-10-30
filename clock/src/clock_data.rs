@@ -1,57 +1,40 @@
-use slint::{SharedString, ToSharedString};
+use slint::ToSharedString;
+use slint_program::SpClockData;
+use speedy::{Readable, Writable};
 
-use crate::ClockData;
-
-pub trait ExtensionClock {
-	fn new(name: &str, hours_offset: i32, minutes_offset: i32) -> Self;
-	fn utc_with_offset(hours_offset: i32, minutes_offset: i32) -> SharedString;
-	fn utc_offset_display(hours_offset: i32, minutes_offset: i32) -> SharedString;
+#[derive(Clone, Readable, Writable, Debug, PartialEq)]
+pub struct ClockData {
+	name: String,
+	hours_offset: i32,
+	minutes_offset: i32,
 }
 
-impl ExtensionClock for ClockData {
-	fn new(name: &str, hours_offset: i32, minutes_offset: i32) -> Self {
-		let hours_offset = {
-			if hours_offset < -12 { -12 }
-			else if hours_offset > 14 { 14 }
-			else { hours_offset }
-		};
-		
-		let minutes_offset = {
-			if minutes_offset < 0 { 0 }
-			else if minutes_offset > 59 { 59 }
-			else { minutes_offset }
-		};
-
+impl ClockData {
+	pub fn new(name: &str, hours_offset: i32, minutes_offset: i32) -> Self {
 		Self {
-			name: name.to_shared_string(),
+			name: name.to_string(),
 			hours_offset,
 			minutes_offset,
-			time: Self::utc_with_offset(hours_offset, minutes_offset),
-			utc_offset_display: Self::utc_offset_display(hours_offset, minutes_offset),
 		}
 	}
 
-	fn utc_with_offset(hours_offset: i32, minutes_offset: i32) -> SharedString {
-		use chrono::{Utc, FixedOffset, Timelike};
-		
-		let utc_time = Utc::now();
-		let total_offset_in_seconds = (3600 * hours_offset) + (60 * minutes_offset);
-
-
-		let offset = FixedOffset::east_opt(total_offset_in_seconds).unwrap();
-		let time = utc_time.with_timezone(&offset);
-		format!(
-			"{:02}:{:02}:{:02}",
-			time.hour(),
-			time.minute(),
-			time.second(),
-		).to_shared_string()		
+	pub fn to_sp_clock_data(self) -> SpClockData {
+		SpClockData {
+			name: self.name.to_shared_string(),
+			hours_offset: self.hours_offset,
+			minutes_offset: self.minutes_offset,
+		}
 	}
 
-	fn utc_offset_display(hours_offset: i32, minutes_offset: i32) -> SharedString {
-		slint::format!("UTC  {:+03}:{:02}", hours_offset, minutes_offset)
+	pub fn from_sp_clock_data(sp_clock_data: SpClockData) -> Self {
+		Self {
+			name: sp_clock_data.name.to_string(),
+			hours_offset: sp_clock_data.hours_offset,
+			minutes_offset: sp_clock_data.minutes_offset,
+		}
+	}
+
+	pub fn name(&self) -> &String {
+		&self.name
 	}
 }
-
-
-

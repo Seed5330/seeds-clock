@@ -1,10 +1,9 @@
 export component NameChange {
 	in property <float> size: 1.0;
 
-	width: 150px * root.size;
+	width: 200px * root.size;
 	height: 24px * root.size;
 	
-
 
 	in property <brush> background <=> rectangle.background;
 	rectangle := Rectangle {
@@ -12,16 +11,15 @@ export component NameChange {
 	}
 
 
-
-	in-out property <string> text <=> text.text;
+	out property <string> text <=> text.text;
 	text := Text {
 		width <=> root.width;
 
-		text <=> text-input.text;
+		text: "JAKQJAKQJAKQJAKQ";
 		color: black;
 
 		font-size: 16px * root.size;
-		font-family: "Roboto Thin";
+		font-family: "Roboto";
 
 		horizontal-alignment: center;
 		vertical-alignment: center;
@@ -33,7 +31,7 @@ export component NameChange {
 	text-input := TextInput {
 		width <=> text.width;
 		
-		text: "GHJGHJGHJGHJ";
+		text: "JAKQJAKQJAKQJAKQ";
 		color: white;
 
 		font-size <=> text.font-size;
@@ -41,5 +39,20 @@ export component NameChange {
 
 		horizontal-alignment <=> text.horizontal-alignment;
 		vertical-alignment <=> text.vertical-alignment;
+
+		changed text => {
+			root.try_set_text(self.text);
+		}
+	}
+
+	public function try_set_text(str: string) {
+		if str.character-count > 16 {
+			// Text component has previous text
+			text-input.text = text.text;
+		}
+		else {
+			text-input.text = str;
+			text.text = str;
+		}
 	}
 }

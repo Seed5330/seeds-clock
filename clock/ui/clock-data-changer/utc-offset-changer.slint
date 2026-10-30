@@ -8,7 +8,7 @@ export component UTCOffsetChanger {
 	height <=> hours-offset-select.height;
 
 
-	public function set-indexes-at-offset(hours-offset: int, minutes-offset: int) {
+	public function set-utc-offset(hours-offset: int, minutes-offset: int) {
 		let hours-offset-indexed = hours-offset + 12;
 		let minutes-offset-indexed = minutes-offset;
 
@@ -19,7 +19,7 @@ export component UTCOffsetChanger {
 	in property <[string]> hours-offset-scroll <=> hours-offset-select.scroll-select;
 	in property <[string]> minutes-offset-scroll <=> minutes-offset-select.scroll-select;
 	horizontal-layout := HorizontalLayout {
-		alignment: center;
+		alignment: space-between;
 		cross-axis-alignment: center;
 
 		spacing: 10px;
@@ -42,11 +42,11 @@ export component UTCOffsetChanger {
 		}
 	}
 
-	public pure function get-hours-offset() -> int{
+	public pure function hours-offset() -> int {
 		hours-offset-select.get-index() - 12
 	}
 
-	public pure function get-minutes-offset() -> int {
+	public pure function minutes-offset() -> int {
 		minutes-offset-select.get-index()
 	}
 } // END - GMTOffsetChanger

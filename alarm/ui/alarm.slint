@@ -14,7 +14,8 @@ import { AlarmBar } from "alarm-bar/alarm-bar.slint";
 import { AlarmScroll } from "alarm-scroll.slint";
 import { AlarmDataChanger } from "alarm-data-changer/alarm-data-changer.slint";
 
-import { AlarmGlobals, AlarmData, Time } from "globals.slint";
+import { AlarmGlobals } from "globals.slint";
+import { AlarmData, Time } from "structs.slint";
 
 export { AlarmGlobals, AlarmData, Time }
 
@@ -90,7 +91,7 @@ export component Alarm {
 	alarm-data-changer := AlarmDataChanger {
 		visible: false;
 
-		clicked => {
+		exit => {
 			self.set-visible(false);
 			duplicate-alarm-error.toggle-off();
 		}

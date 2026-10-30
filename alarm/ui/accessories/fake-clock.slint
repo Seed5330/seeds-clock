@@ -1,7 +1,8 @@
 import { CommonText } from "@helpers/helpers.slint";
 import { AlarmGlobals } from "../globals.slint";
+
 export component FakeClock {
-	width: common-text-style.width * 1.25;
+	width: 250px;
 	height: 36px;
 
 	in property <brush> background <=> rectangle.background;
@@ -10,31 +11,17 @@ export component FakeClock {
 	}
 
 
-	in-out property <int> hour: 11;
-	in-out property <int> minute: 55;
+	in-out property <int> hour: 12;
+	in-out property <int> minute: 25;
 
-	common-text-style := CommonText {
-		text: AlarmGlobals.time-display(hour, minute);
+	common-text := CommonText {
+		text: "Tue  |  " + root.time-display(root.hour, root.minute);
 		font-size: root.height / 1.5;
 	}
 
-	Timer {
-		running: true;
-		interval: 1000ms;
-
-		triggered => {
-			root.minute += 1;
-
-			if root.minute == 60 {
-				root.minute = 0;
-				hour += 1;
-			}
-			if root.hour == 24 {
-				root.hour = 0;
-			}
-		}
+	pure function time-display(hour: int, minute: int) -> string {
+		AlarmGlobals.time-display(hour, minute)
 	}
-
 
 	@children
 }

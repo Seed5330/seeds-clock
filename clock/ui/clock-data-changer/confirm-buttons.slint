@@ -1,0 +1,47 @@
+import { ButtonText } from "@helpers/helpers.slint";
+
+export component ConfirmButtons {
+	in property <float> size: 1.0;
+
+	width: 260px * root.size;
+	height: cancel.height;
+
+
+	callback delete <=> delete.clicked;
+	callback cancel <=> cancel.clicked;
+	callback save <=> save.clicked;
+
+	horizontal-layout := HorizontalLayout {
+		alignment: space-between;
+
+		padding-left: 5px;
+		padding-right: 5px;
+
+		delete := ButtonText {
+			width: 80px;
+
+			size <=> root.size;
+			text: "Delete";
+
+			background: save.background.darker(0.2);
+		}
+
+		cancel := ButtonText {
+			width: save.width;
+
+			size <=> root.size;
+			text: "Cancel";
+
+			background: save.background.darker(0.1);
+		}
+
+		save := ButtonText {
+			width: 80px;
+
+			size <=> root.size;
+			text: "Save";
+
+			background: #BA1C9B;
+		}
+	}
+}

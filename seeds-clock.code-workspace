@@ -3,30 +3,11 @@
 		{
 			"name": "seeds-clock",
 			"path": "."
-		},
-		{
-			"name": "bin",
-			"path": "bin"
-		},
-		{
-			"name": "helpers",
-			"path": "helpers"
-		},
-		{
-			"name": "slint-program",
-			"path": "slint-program"
-		},
-		{
-			"name": "clock",
-			"path": "clock"
-		},
-		{
-			"name": "alarm",
-			"path": "alarm"
 		}
 	],
 	"settings": {
 		"slint.libraryPaths": {
+
 
 
 			"root": "",
@@ -35,6 +16,8 @@
 			"assets": "assets",
 			"alarm": "alarm/ui",
 			"clock": "clock/ui",
+			"stopwatch": "stopwatch/ui",
+			"timer": "timer/ui",
 			
 		}
 	}

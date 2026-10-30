@@ -1,4 +1,5 @@
-import { AlarmGlobals, AlarmData, Time } from "../globals.slint";
+import { AlarmGlobals } from "../globals.slint";
+import { AlarmData, Time } from "../structs.slint";
 import { NameChanger } from "name-changer.slint";
 import { TimeChanger } from "time-changer.slint";
 import { Scheduler } from "scheduler.slint";
@@ -49,23 +50,26 @@ export component AlarmDataChanger {
 
 	private property <[AlarmData]> alarm-list <=> AlarmGlobals.alarm_list;
 
-	callback clicked();
+	callback exit();
 	ConfirmButtons {
 		y: 185px;
 		size: 0.8;
 		width: 240px;
 
 		delete => {
-			root.alarm-list.remove(root.index);
-			root.clicked();
+			if root.index != -1 {
+				root.alarm-list.remove(root.index);
+			}
+			root.exit();
 		}
 
 		cancel => {
-			root.clicked();
+			root.exit();
 		}
 
 		save => {
 			root.save-alarm(root.index);
+			root.exit();
 		}
 	}
 
@@ -121,7 +125,5 @@ export component AlarmDataChanger {
 		else {
 			root.alarm-list[index] = alarm-data;
 		}
-
-		root.clicked();
 	}
 }

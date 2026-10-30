@@ -1,16 +1,20 @@
+import "@assets/fonts/roboto/Roboto-VariableFont_wdth,wght.ttf";
+
 import { HelpersGlobals } from "@helpers/helpers.slint";
 
-import { PlaceholderTab } from "placeholder-tab.slint";
-import { TabProperties, TabSwitch } from "tab-switcher.slint";
 
 
 
-import { Clock, ClockGlobals, ClockData } from "@clock/clock.slint";
+
+import { Clock, ClockGlobals, ClockData, ClockNameValidity } from "@clock/clock.slint";
 import { Alarm, AlarmGlobals, AlarmData, Time as AlarmTime } from "@alarm/alarm.slint";
+import { Stopwatch } from "@stopwatch/stopwatch.slint";
+import { Timer as CountTimer } from "@timer/timer.slint";
+import { TabSwitch } from "tab-switcher.slint";
 
 export {
 	HelpersGlobals,
-	ClockGlobals, ClockData,
+	ClockGlobals, ClockData as SpClockData, ClockNameValidity as SpClockNameValidity,
 	AlarmGlobals, AlarmData as SpAlarmData, AlarmTime as SpAlarmTime,
 }
 
@@ -27,53 +31,33 @@ export component SlintProgram inherits Window {
 
 	background: lightgray;
 
+
+	in-out property <int> active-tab: 0;
 	
-	pure function tab-properties-new(name: string, color: brush, visible: bool) -> TabProperties {
-		{name: name, color: color, visible: visible}
-	}
+	clock := Clock { visible: root.active-tab == 0; }
+	alarm := Alarm { visible: root.active-tab == 1; }
+	stopwatch := Stopwatch { visible: root.active-tab == 2; }
+	count-timer := CountTimer { visible: root.active-tab == 3;}
 
-	
-	in-out property <[bool]> enabled-tabs: [
-		true, false, false, false
+
+	private property <[{name: string, color: brush}]> tab-switchers: [
+		{name: "Clock", color: #A622E3},
+		{name: "Alarm", color: #F59D47},
+		{name: "Stopwatch", color: #120059},
+		{name: "Timer", color: #27D8F5},
 	];
 
-
-	clock := Clock { visible: root.enabled-tabs[0]; }
-	alarm := Alarm { visible: root.enabled-tabs[1];}
-	stopwatch := PlaceholderTab {
-		visible: root.enabled-tabs[2]; background: #120059; text: "Stopwatch";
-	}
-	timer := PlaceholderTab {
-		visible: root.enabled-tabs[3]; background: #27D8F5; text: "Timer";
-	}
-
-
-	property <[brush]> tab-colors: [
-		#A622E3, #F59D47, #120059, #27D8F5,
-	];
-	property <[string]> tab-names: [
-		"Clock", "Alarm", "Stopwatch", "Timer",
-	];
 
 	HorizontalLayout {
 		alignment: center;
 
-		for i in 4: TabSwitch {
-			color: root.tab-colors[i];
-			name: root.tab-names[i];
+		for tab[i] in tab-switchers: TabSwitch {
+			name: tab.name;
+			color: tab.color;
 
 			clicked => {
-				change-to-tab(i);
+				root.active-tab = i;
 			}
 		}
-	}
-
-	function change-to-tab(tab-id: int) {
-		enabled-tabs[0] = false;
-		enabled-tabs[1] = false;
-		enabled-tabs[2] = false;
-		enabled-tabs[3]= false;
-
-		enabled-tabs[tab-id] = true;
 	}
 }
