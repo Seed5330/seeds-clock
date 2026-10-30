@@ -6,7 +6,16 @@ fn main() {
 		(
 			"root".to_string(),
 			manifest_dir.join("../"),
+		),		
+		(
+			"assets".to_string(),
+			manifest_dir.join("../assets"),
 		),
+		(
+			"slint-program".to_string(),
+			manifest_dir.join("ui"),
+		),
+
 		(
 			"helpers".to_string(),
 			manifest_dir.join("../helpers/ui"),
@@ -19,13 +28,13 @@ fn main() {
 			"alarm".to_string(),
 			manifest_dir.join("../alarm/ui"),
 		),
-		(
-			"assets".to_string(),
-			manifest_dir.join("../assets"),
+(
+			"stopwatch".to_string(),
+			manifest_dir.join("../stopwatch/ui"),
 		),
-		(
-			"slint-program".to_string(),
-			manifest_dir.join("ui"),
+(
+			"timer".to_string(),
+			manifest_dir.join("../timer/ui"),
 		),
 	]);
 

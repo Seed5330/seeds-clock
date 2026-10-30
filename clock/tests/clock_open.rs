@@ -10,8 +10,7 @@ use slint_program::SlintProgram;
 fn clock_open() {
 	let slint_program = SlintProgram::new().unwrap();
 
-
-	
+	slint_program.set_active_tab(0);
 	clock::load(slint_program.as_weak());
 
 
